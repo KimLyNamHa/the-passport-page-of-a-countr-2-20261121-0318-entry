@@ -8,7 +8,8 @@ import io
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-FONT_DIR = "/usr/share/fonts/truetype/dejavu"
+_BUNDLED = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+FONT_DIR = _BUNDLED if os.path.isdir(_BUNDLED) else "/usr/share/fonts/truetype/dejavu"
 F_SANS = os.path.join(FONT_DIR, "DejaVuSans.ttf")
 F_BOLD = os.path.join(FONT_DIR, "DejaVuSans-Bold.ttf")
 F_MONO = os.path.join(FONT_DIR, "DejaVuSansMono.ttf")
@@ -614,8 +615,9 @@ def draw_spread():
 
 def main():
     out = draw_spread()
-    os.makedirs("/output", exist_ok=True)
-    out.save("/output/entry.png", optimize=True)
+    out_path = os.path.join(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"), "entry.png")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    out.save(out_path, optimize=True)
 
 
 if __name__ == "__main__":
